@@ -1,6 +1,13 @@
 import express from "express";
-import { listarPosts, postarNovoPost, uploadImagem} from '../controller/postsController.js';
+import { listarPosts, postarNovoPost, uploadImagem , atualizarNovoPost} from '../controller/postsController.js';
 import multer from "multer";
+import cors from "cors";
+
+
+const corsOptions = {
+    origin: 'http://localhost:8000',
+    optionsSuccessStatus: 200
+}
 
 
 const storage = multer.diskStorage({
@@ -18,11 +25,15 @@ const storage = multer.diskStorage({
 const routes = (app) => {
      // Middleware para interpretar o corpo das requisições como JSON
     app.use(express.json());
+    app.use(cors(corsOptions));
 
      // Rota GET para "/posts" que retorna todos os posts do banco de dados
      app.get("/posts", listarPosts);
      app.post("/posts", postarNovoPost);
      app.post("/upload", upload.single("imagem"),uploadImagem);
+
+
+     app.put("/upload/:id", atualizarNovoPost);
 }
 
 export default routes;
